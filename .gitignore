@@ -1,0 +1,13 @@
+## User settings
+xcuserdata/
+
+# Code Injection
+#
+iOSInjectionProject/
+
+# OS X temporary files
+.DS_Store
+
+# Xcode build files
+DerivedData/
+build/
