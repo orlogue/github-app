@@ -16,12 +16,12 @@ Below are demonstrations of key app features:
 | **Favorites**                                                                                             | **Error Handling**                                                                                        |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | <img src="https://github.com/user-attachments/assets/41917cd4-63a7-4eac-ba68-97c9734b6809" width="300" /> | <img src="https://github.com/user-attachments/assets/ed79cd45-83e2-4e76-afe6-03d14d38f932" width="300" /> |
-| _Adding and accessing your saved favorite GitHub users_                                                   | _How the app handles errors and edge cases_                                                               |
+| _Managing your favorite GitHub users_                                                                     | _How the app handles errors_                                                                              |
 
-| **Empty States**                                                                                          |     |
-| --------------------------------------------------------------------------------------------------------- | --- |
-| <img src="https://github.com/user-attachments/assets/e4f09545-a8cc-43db-8b22-bbbc030d09e0" width="300" /> |     |
-| _How the app displays empty states (no results, no favorites, etc.)_                                      |     |
+| **Empty States**                                                                                          |
+| --------------------------------------------------------------------------------------------------------- |
+| <img src="https://github.com/user-attachments/assets/e4f09545-a8cc-43db-8b22-bbbc030d09e0" width="300" /> |
+| _How the app displays empty states_                                                                       |
 
 ## Technologies
 
