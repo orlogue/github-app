@@ -10,14 +10,11 @@ Below are demonstrations of key app features:
 
 | Feature                 | Demonstration                                                                                                           |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **User Search**         | ![Searching for GitHub users](./GIF/user-search.gif)<br>_Searching for users by GitHub username_                        |
-| **User Profile**        | ![Viewing user profile details](./GIF/user-profile.gif)<br>_Viewing detailed information about a GitHub user_           |
-| **Followers List**      | ![Browsing user followers](./GIF/followers-list.gif)<br>_Browsing through a user's followers_                           |
-| **Searching Followers** | ![Searching within followers](./GIF/search-followers.gif)<br>_Filtering a user's followers list_                        |
-| **Favorites**           | ![Accessing favorites tab](./GIF/favorites-tab.gif)<br>_Accessing your saved favorite GitHub users_                     |
-| **Adding to Favorites** | ![Adding users to favorites](./GIF/add-to-favorites.gif)<br>_Adding GitHub users to your favorites list_                |
-| **Error Handling**      | ![Error handling demonstration](./GIF/error-handling.gif)<br>_How the app handles errors and edge cases_                |
-| **Empty States**        | ![Empty states display](./GIF/empty-states.gif)<br>_How the app displays empty states (no results, no favorites, etc.)_ |
+| **User Search**         | ![Searching for GitHub user](https://github.com/user-attachments/assets/439aa4de-47c7-4d32-9f41-d0c2b3170295)<br>_Searching for users by GitHub username_                        |
+| **Followers List**      | ![Browsing user followers](https://github.com/user-attachments/assets/5dd819b1-d8b0-4caa-a23c-c191b726c89d)<br>_Browsing through a user's followers_                           |                    |
+| **Favorites**           | ![Add to favorites](https://github.com/user-attachments/assets/41917cd4-63a7-4eac-ba68-97c9734b6809)<br>_Adding and accessing your saved favorite GitHub users_                     |
+| **Error Handling**      | ![Error handling demonstration](https://github.com/user-attachments/assets/ed79cd45-83e2-4e76-afe6-03d14d38f932)<br>_How the app handles errors and edge cases_                |
+| **Empty States**        | ![Empty states display](https://github.com/user-attachments/assets/e4f09545-a8cc-43db-8b22-bbbc030d09e0)<br>_How the app displays empty states (no results, no favorites, etc.)_ |
 
 ## Technologies
 
