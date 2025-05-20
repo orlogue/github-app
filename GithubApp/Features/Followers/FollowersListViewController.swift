@@ -7,13 +7,14 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     
     private let username: String
     private let model = FollowersModel()
+    private let imageService: ImageServiceProtocol
     private var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
     private var searchController: UISearchController!
-    private var imageLoadingTasks: [String: UUID] = [:]
-    var imageService: ImageServiceProtocol = ImageService.shared
+    private var imageLoadingTasks = [String: UUID]()
     
-    init(username: String) {
+    init(username: String, imageService: ImageServiceProtocol = ImageService.shared) {
         self.username = username
+        self.imageService = imageService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,35 +34,37 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.largeTitleDisplayMode = .never
     }
-    
+
     private func updateSearchBarVisibility(animated: Bool = true) {
         guard let searchController = navigationItem.searchController else { return }
-        
         let shouldHide = model.isEmpty
         
         if animated {
             UIView.transition(with: searchController.searchBar, duration: Constants.defaultAnimationDuration, options: .transitionCrossDissolve) {
                 searchController.searchBar.isHidden = shouldHide
-                self.navigationItem.hidesSearchBarWhenScrolling = shouldHide
             }
         } else {
             searchController.searchBar.isHidden = shouldHide
-            self.navigationItem.hidesSearchBarWhenScrolling = shouldHide
         }
     }
     
     private func loadFollowers() {
-        let loaderView = LoadingOverlayViewController()
+        let loaderViewController = LoadingOverlayViewController()
+        
+        if let searchController = navigationItem.searchController {
+            searchController.searchBar.isHidden = true
+        }
         
         model.loadFollowers(for: username,
                             onStart: { [weak self] in
-            self?.presentOverlay(loaderView)
+            self?.presentOverlay(loaderViewController)
         }) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                self.dismissOverlay(loaderView)
+                self.dismissOverlay(loaderViewController)
                 self.handleFollowersResult(result)
             }
         }
@@ -73,12 +76,10 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
             if model.isEmpty {
                 let message = "This user doesn't have any followers. Be the first one!"
                 self.showEmptyState(with: message, in: self.view)
-                updateSearchBarVisibility(animated: false)
+                updateSearchBarVisibility()
                 return
             }
             updateData(on: model.currentFollowersList)
-            updateSearchBarVisibility()
-            
         case .failure(let error):
             self.presentAlert(title: error.message.title, description: error.message.description) {
                 self.navigationController?.popViewController(animated: true)
@@ -95,15 +96,7 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
         searchController.searchBar.isHidden = true
         
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.setSearchFocusedAppearance(true)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.setSearchFocusedAppearance(false)
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     private func configureDataSource() {
@@ -127,7 +120,7 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     
         let taskId = imageService.loadImage(from: follower.avatarUrl) { [weak self, weak cell] image in
             guard let self else { return }
-            guard let cell = cell, cell.followerLogin == follower.login, let image else { return }
+            guard let cell = cell, cell.username == follower.login, let image else { return }
             
             cell.setImage(image: image)
             imageLoadingTasks[follower.login] = nil
@@ -143,6 +136,8 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
         snapshot.appendSections([.main])
         snapshot.appendItems(followers)
         
+        updateSearchBarVisibility()
+        
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
@@ -151,6 +146,7 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     deinit {
         imageLoadingTasks.values.forEach { imageService.cancelLoad(for: $0) }
         imageLoadingTasks.removeAll()
+        model.reset()
     }
 }
 
@@ -159,15 +155,15 @@ extension FollowersListViewController: UICollectionViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let height = scrollView.frame.size.height
-        let loaderView = LoadingOverlayViewController()
+        let loaderViewController = LoadingOverlayViewController()
         
         if offsetY >= (contentHeight - height) {
             model.loadMoreFollowers(for: username) { [weak self] in
-                self?.presentOverlay(loaderView)
+                self?.presentOverlay(loaderViewController)
             } completion: { [weak self] result in
                 DispatchQueue.main.async {
                     self?.handleFollowersResult(result)
-                    self?.dismissOverlay(loaderView)
+                    self?.dismissOverlay(loaderViewController)
                 }
             }
         }
@@ -175,11 +171,9 @@ extension FollowersListViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let follower = model.follower(at: indexPath.item) else { return }
-        
-        let userDetailsViewController = UserViewController(username: follower.login, isInSheetMode: true)
-        let navigationController = UINavigationController(rootViewController: userDetailsViewController)
-        navigationController.sheetPresentationController?.preferredCornerRadius = Constants.sheetCornerRadius
-        present(navigationController, animated: true)
+
+        let userViewController = UserLoadingViewController(username: follower.login)
+        navigationController?.pushViewController(userViewController, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

@@ -29,7 +29,7 @@ class EmptyStateView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            messageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -100),
+            messageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -150),
             messageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.Padding.medium),
             messageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.Padding.medium),
             messageView.heightAnchor.constraint(equalToConstant: 200),

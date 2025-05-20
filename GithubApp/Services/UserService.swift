@@ -1,7 +1,7 @@
 import Foundation
 
 protocol UserServiceProtocol {
-    func getUserDetails(for username: String, completed: @escaping (Result<User, NetworkError>) -> Void)
+    func getUserDetails(for username: String, completion: @escaping (Result<User, NetworkError>) -> Void)
 }
 
 final class UserService: UserServiceProtocol {
@@ -10,7 +10,7 @@ final class UserService: UserServiceProtocol {
     
     private init() {}
     
-    func getUserDetails(for username: String, completed: @escaping (Result<User, NetworkError>) -> Void) {
-        return networkManager.getUserDetails(for: username, completed: completed)
+    func getUserDetails(for username: String, completion: @escaping (Result<User, NetworkError>) -> Void) {
+        return networkManager.getUserDetails(for: username, completion: completion)
     }
 }

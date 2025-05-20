@@ -3,7 +3,7 @@ import UIKit
 final class FollowerCell: UICollectionViewCell {
     static let reuseID = "FollowerCell"
     
-    private(set) var followerLogin: String?
+    private(set) var username: String?
 
     let avatarImageView = AvatarImageView(frame: .zero)
     let usernameLabel = TitleLabel(textAlignment: .center, fontSize: 16)
@@ -21,11 +21,11 @@ final class FollowerCell: UICollectionViewCell {
         super.prepareForReuse()
         avatarImageView.resetImage()
         usernameLabel.text = nil
-        followerLogin = nil
+        username = nil
     }
     
     func setFollower(follower: Follower) {
-        followerLogin = follower.login
+        username = follower.login
         usernameLabel.text = follower.login
     }
     
@@ -40,7 +40,7 @@ final class FollowerCell: UICollectionViewCell {
         let padding = Constants.Padding.xXSmall
         
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
+            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
             avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
             avatarImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             avatarImageView.heightAnchor.constraint(equalTo: avatarImageView.widthAnchor),

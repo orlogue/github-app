@@ -7,6 +7,8 @@ final class UserHeaderView: UIView {
     let locationImage = UIImageView()
     let locationLabel = SecondaryTitleLabel(fontSize: 18)
     let bioLabel = BodyLabel(textAlignment: .left)
+    private var bioConstraints = [NSLayoutConstraint]()
+    private var avatarBottomContstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +35,16 @@ final class UserHeaderView: UIView {
             locationLabel.isHidden = true
         }
         
-        bioLabel.text = user.bio
+        if let bio = user.bio, !bio.isEmpty {
+            bioLabel.text = bio
+            bioLabel.isHidden = false
+            avatarBottomContstraint?.isActive = false
+            NSLayoutConstraint.activate(bioConstraints)
+        } else {
+            bioLabel.isHidden = true
+            NSLayoutConstraint.deactivate(bioConstraints)
+            avatarBottomContstraint?.isActive = true
+        }
     }
     
     func setAvatarImage(_ image: UIImage?) {
@@ -46,6 +57,7 @@ final class UserHeaderView: UIView {
         locationImage.isHidden = true
         locationLabel.isHidden = true
         bioLabel.numberOfLines = 3
+        bioLabel.lineBreakMode = .byTruncatingTail
     }
     
     private func layoutSubviewsHierarchy() {
@@ -81,11 +93,14 @@ final class UserHeaderView: UIView {
             locationLabel.leadingAnchor.constraint(equalTo: locationImage.trailingAnchor, constant: Constants.Padding.xXSmall),
             locationLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             locationLabel.heightAnchor.constraint(equalToConstant: 18 * 1.2),
-            
-            bioLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: innerPadding / 2),
+        ])
+        
+        bioConstraints = [
+            bioLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: innerPadding),
             bioLabel.leadingAnchor.constraint(equalTo: avatarImage.leadingAnchor),
             bioLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bioLabel.heightAnchor.constraint(equalToConstant: 60)
-        ])
+            bioLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.Padding.xSmall),
+        ]
+        avatarBottomContstraint = avatarImage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.Padding.xSmall)
     }
 }

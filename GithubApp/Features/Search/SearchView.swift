@@ -7,7 +7,11 @@ final class SearchView: UIView {
         view.image = UIImage(named: "gh-logo")
         return view
     }()
-    lazy var usernameTextField = TextField()
+    lazy var usernameTextField: TextField = {
+        let textField = TextField()
+        textField.autocorrectionType = .no
+        return textField
+    }()
     lazy var submitButton = PrimaryButton(title: "Continue", backgroundColor: .systemGreen)
     
     override init(frame: CGRect) {
@@ -22,9 +26,6 @@ final class SearchView: UIView {
     
     private func layoutSubviewsHierarchy() {
         [logoImageView, usernameTextField, submitButton].forEach { addSubview($0) }
-        addSubview(logoImageView)
-        addSubview(usernameTextField)
-        addSubview(submitButton)
         
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 80),
@@ -32,14 +33,14 @@ final class SearchView: UIView {
             logoImageView.heightAnchor.constraint(equalToConstant: 200),
             logoImageView.widthAnchor.constraint(equalToConstant: 200),
             
-            usernameTextField.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: Constants.Padding.large),
-            usernameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.Padding.large),
-            usernameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.Padding.large),
+            usernameTextField.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: Constants.Padding.medium),
+            usernameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.Padding.medium),
+            usernameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.Padding.medium),
             usernameTextField.heightAnchor.constraint(equalToConstant: Constants.Button.height),
             
-            submitButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            submitButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.Padding.large),
-            submitButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.Padding.large),
+            submitButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -80),
+            submitButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 200),
+            submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             submitButton.heightAnchor.constraint(equalToConstant: Constants.Button.height)
         ])
     }

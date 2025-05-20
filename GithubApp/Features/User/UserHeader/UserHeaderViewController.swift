@@ -1,7 +1,7 @@
 import UIKit
 
 final class UserHeaderViewController: RootViewController<UserHeaderView> {
-    private let user: User?
+    private let user: User
     private let imageService: ImageServiceProtocol
     
     init(user: User, imageService: ImageServiceProtocol = ImageService.shared) {
@@ -20,8 +20,6 @@ final class UserHeaderViewController: RootViewController<UserHeaderView> {
     }
     
     private func configureData() {
-        guard let user else { return }
-        
         let userHeaderDTO = UserHeaderDTO(avatarImage: nil, login: user.login, name: user.name, location: user.location, bio: user.bio)
         
         let _ = imageService.loadImage(from: user.avatarUrl) { [weak self] image in

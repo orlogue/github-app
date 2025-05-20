@@ -1,7 +1,7 @@
 import UIKit
 
 protocol FollowersServiceProtocol {
-    func getFollowers(for username: String, page: Int, completed: @escaping (Result<[Follower], NetworkError>) -> Void)
+    func getFollowers(for username: String, page: Int, completion: @escaping (Result<[Follower], NetworkError>) -> Void)
 }
 
 final class FollowersService: FollowersServiceProtocol {
@@ -12,14 +12,14 @@ final class FollowersService: FollowersServiceProtocol {
     
     private init() {}
     
-    func getFollowers(for username: String, page: Int, completed: @escaping (Result<[Follower], NetworkError>) -> Void) {
+    func getFollowers(for username: String, page: Int, completion: @escaping (Result<[Follower], NetworkError>) -> Void) {
 
         guard !isLoading else { return }
         isLoading = true
         
         networkManager.getFollowers(for: username, page: page) { [weak self] result in
             self?.isLoading = false
-            completed(result)
+            completion(result)
         }
     }
 }

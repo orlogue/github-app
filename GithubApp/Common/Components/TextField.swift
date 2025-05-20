@@ -30,7 +30,7 @@ class TextField: UITextField {
     private func configureAppearance() {
         translatesAutoresizingMaskIntoConstraints = false
         
-        layer.cornerRadius = Constants.Button.cornerRadius
+        layer.cornerRadius = Constants.View.cornerRadius
         layer.borderWidth = 2
         layer.borderColor = UIColor.systemGray4.cgColor
         

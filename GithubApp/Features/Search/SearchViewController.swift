@@ -2,6 +2,7 @@ import UIKit
 
 final class SearchViewController: RootViewController<SearchView> {
     private let userService: UserServiceProtocol
+    private var user: User?
     
     init(userService: UserServiceProtocol = UserService.shared) {
         self.userService = userService
@@ -15,6 +16,7 @@ final class SearchViewController: RootViewController<SearchView> {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureInteractions()
+        configureTextField()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -23,32 +25,58 @@ final class SearchViewController: RootViewController<SearchView> {
     }
     
     private func configureInteractions() {
-        rootView.usernameTextField.delegate = self
-        rootView.submitButton.addTarget(self, action: #selector(pushFollowersViewController), for: .touchUpInside)
+        rootView.submitButton.addTarget(self, action: #selector(goToUserView), for: .touchUpInside)
         
         createDismissKeyboardTapGesture()
     }
     
+    private func configureTextField() {
+        rootView.usernameTextField.delegate = self
+        rootView.usernameTextField.autocapitalizationType = .none
+    }
+    
     @objc
-    private func pushFollowersViewController() {
+    private func goToUserView() {
         guard let username = rootView.usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !username.isEmpty else {
             presentAlert(title: "Invalid username", description: "The username you entered is empty. Please write some symbols", buttonTitle: "Got it!")
             return
         }
         
-        userService.getUserDetails(for: username) { [weak self] result in
+        rootView.endEditing(true)
+        loadUser(username) { [weak self] result in
             guard let self else { return }
             
             switch result {
             case let .success(user):
                 DispatchQueue.main.async {
-                    let userViewController = UserViewController(username: username, user: user)
-                    self.navigationController?.pushViewController(userViewController, animated: true)
+                    self.displayUserViewController(user)
                 }
             case let .failure(error):
-                self.presentAlert(title: error.message.title, description: error.message.description)
+                self.presentAlert(title: error.message.title, description: error.message.description) {
+                    self.rootView.usernameTextField.becomeFirstResponder()
+                }
             }
         }
+    }
+    
+    private func loadUser(_ username: String, completion: @escaping (Result<User, NetworkError>) -> Void) {
+        let loaderViewController = LoadingOverlayViewController()
+        presentOverlay(loaderViewController)
+        
+        userService.getUserDetails(for: username) { [weak self] result in
+            guard let self else { return }
+            
+            DispatchQueue.main.async {
+                self.dismissOverlay(loaderViewController)
+            }
+            
+            completion(result)
+        }
+    }
+    
+    private func displayUserViewController(_ user: User) {
+        let userViewController = UserViewController(user: user)
+        navigationController?.pushViewController(userViewController, animated: true)
     }
     
     private func createDismissKeyboardTapGesture() {
@@ -59,7 +87,7 @@ final class SearchViewController: RootViewController<SearchView> {
 
 extension SearchViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        pushFollowersViewController()
+        goToUserView()
         return true
     }
     

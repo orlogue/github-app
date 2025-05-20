@@ -1,9 +1,9 @@
 import UIKit
 
 extension UIViewController {
-    func presentAlert(title: String, description: String?, buttonTitle: String = "Got it!", onCompleted: (() -> Void)? = nil) {
+    func presentAlert(title: String, description: String?, buttonTitle: String = "Got it!", oncompletion: (() -> Void)? = nil) {
         DispatchQueue.main.async {
-            let alertViewController = AlertViewController(title: title, description: description, buttonTitle: buttonTitle, onCompleted: onCompleted)
+            let alertViewController = AlertViewController(title: title, description: description, buttonTitle: buttonTitle, oncompletion: oncompletion)
             alertViewController.modalPresentationStyle = .overFullScreen
             alertViewController.modalTransitionStyle = .crossDissolve
             self.present(alertViewController, animated: true)
@@ -49,31 +49,5 @@ extension UIViewController {
         let emptyStateView = EmptyStateView(message: message)
         emptyStateView.frame = view.bounds
         view.addSubview(emptyStateView)
-    }
-    
-    func setSearchFocusedAppearance(_ isFocused: Bool) {
-        guard let navigationBar = navigationController?.navigationBar else { return }
-        
-        if isFocused {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithDefaultBackground()
-            
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
-        } else {
-            let standardAppearance = UINavigationBarAppearance()
-            standardAppearance.configureWithTransparentBackground()
-            standardAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
-            standardAppearance.backgroundColor = .systemBackground.withAlphaComponent(0.7)
-            
-            #warning("Fix disappearance of a bottom line")
-            let edgeAppearance = UINavigationBarAppearance()
-            edgeAppearance.configureWithOpaqueBackground()
-            edgeAppearance.backgroundColor = .clear
-            edgeAppearance.shadowColor = nil
-            
-            navigationBar.standardAppearance = standardAppearance
-            navigationBar.scrollEdgeAppearance = edgeAppearance
-        }
     }
 }

@@ -13,7 +13,7 @@ class AvatarImageView: UIImageView {
     }
     
     private func configureAppearance() {
-        layer.cornerRadius = Constants.cornerRadius
+        layer.cornerRadius = Constants.View.cornerRadius
         clipsToBounds = true
         image = placeholderImage
         translatesAutoresizingMaskIntoConstraints = false

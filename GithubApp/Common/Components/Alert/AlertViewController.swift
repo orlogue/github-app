@@ -8,13 +8,13 @@ class AlertViewController: UIViewController {
     private let alertTitle: String?
     private let message: String?
     private let buttonTitle: String?
-    private let onCompleted: Closure?
+    private let oncompletion: Closure?
     
-    init(title: String, description: String?, buttonTitle: String, onCompleted: Closure? = nil) {
+    init(title: String, description: String?, buttonTitle: String, oncompletion: Closure? = nil) {
         self.alertTitle = title
         self.message = description
         self.buttonTitle = buttonTitle
-        self.onCompleted = onCompleted
+        self.oncompletion = oncompletion
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -59,7 +59,7 @@ class AlertViewController: UIViewController {
     
     @objc func onDismiss() {
         dismiss(animated: true)
-        onCompleted?()
+        oncompletion?()
     }
 }
 

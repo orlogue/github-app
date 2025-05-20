@@ -15,16 +15,19 @@ enum NetworkError: Error {
             )
         case .connectionIssue:
             return ErrorMessage(
-                            title: "No Internet Connection",
-                            description: "Make sure you're connected to the internet and try again"
-                        )
+                title: "No Internet Connection",
+                description: "Make sure you're connected to the internet and try again"
+            )
         case .badResponse:
             return ErrorMessage(
-                            title: "Server Error",
-                            description: "Something went wrong on our end. Please try again later"
-                        )
+                title: "Server Error",
+                description: "Something went wrong on our end. Please try again later"
+            )
         case .invalidData:
-            return ErrorMessage(title: "Incorrect data", description: "Something happened with loaded data. Try again later")
+            return ErrorMessage(
+                title: "Incorrect data",
+                description: "Something happened with loaded data. Try again later"
+            )
         }
     }
 }

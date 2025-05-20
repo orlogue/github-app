@@ -1,14 +1,15 @@
 import UIKit
 
 enum Constants {
-    static let defaultAnimationDuration: TimeInterval = 0.25
-    static let cornerRadius: CGFloat = 12
-    static let sheetCornerRadius: CGFloat = 24
-
+    enum View {
+        static let cornerRadius: CGFloat = 12
+        static let largeCornerRadius: CGFloat = 24
+    }
+    
     enum Button {
         static let animationDuration: TimeInterval = 0.15
-        static let cornerRadius: CGFloat = Constants.cornerRadius
         static let height: CGFloat = 50
+        static let smallHeight: CGFloat = 44
     }
 
     enum Padding {
@@ -25,9 +26,17 @@ enum Constants {
     
     enum SFSymbols {
         static let location = "mappin.and.ellipse"
+        static let repo = "folder"
+        static let gists = "text.alignleft"
+        static let heart = "heart"
+        static let followers = "person.2"
+        static let favorite = "star"
+        static let favoriteFilled = "star.fill"
     }
     
     enum Resources {
         static let avatarPlaceholderName = "avatar-placeholder"
     }
+    
+    static let defaultAnimationDuration: TimeInterval = 0.25
 }

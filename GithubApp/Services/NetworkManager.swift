@@ -1,10 +1,6 @@
 import UIKit
 
-protocol NetworkManagerProtocol {
-    func getFollowers(for username: String, page: Int, completed: @escaping (Result<[Follower], NetworkError>) -> Void)
-
-    func getUserDetails(for username: String, completed: @escaping (Result<User, NetworkError>) -> Void)
-}
+typealias NetworkManagerProtocol = FollowersServiceProtocol & UserServiceProtocol
 
 final class NetworkManager: NetworkManagerProtocol {
     static let shared = NetworkManager()
@@ -12,27 +8,27 @@ final class NetworkManager: NetworkManagerProtocol {
     
     private init() {}
     
-    func getFollowers(for username: String, page: Int, completed: @escaping (Result<[Follower], NetworkError>) -> Void) {
+    func getFollowers(for username: String, page: Int, completion: @escaping (Result<[Follower], NetworkError>) -> Void) {
         let endpoint = "\(baseUrl)/users/\(username)/followers?per_page=99&page=\(page)"
         
         guard let url = URL(string: endpoint) else {
-            completed(.failure(.invalidUrl))
+            completion(.failure(.invalidUrl))
             return
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let _ = error {
-                completed(.failure(.connectionIssue))
+                completion(.failure(.connectionIssue))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == StatusCode.ok else {
-                completed(.failure(.badResponse))
+                completion(.failure(.badResponse))
                 return
             }
             
             guard let data = data else {
-                completed(.failure(.invalidData))
+                completion(.failure(.invalidData))
                 return
             }
             
@@ -40,34 +36,34 @@ final class NetworkManager: NetworkManagerProtocol {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let followers = try decoder.decode([Follower].self, from: data)
-                completed(.success(followers))
+                completion(.success(followers))
             } catch {
-                completed(.failure(.invalidData))
+                completion(.failure(.invalidData))
             }
         }.resume()
     }
     
-    func getUserDetails(for username: String, completed: @escaping (Result<User, NetworkError>) -> Void) {
+    func getUserDetails(for username: String, completion: @escaping (Result<User, NetworkError>) -> Void) {
         let endpoint = baseUrl + "/users/\(username)"
         
         guard let url = URL(string: endpoint) else {
-            completed(.failure(.invalidUrl))
+            completion(.failure(.invalidUrl))
             return
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let _ = error {
-                completed(.failure(.connectionIssue))
+                completion(.failure(.connectionIssue))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == StatusCode.ok else {
-                completed(.failure(.badResponse))
+                completion(.failure(.badResponse))
                 return
             }
             
             guard let data = data else {
-                completed(.failure(.invalidData))
+                completion(.failure(.invalidData))
                 return
             }
             
@@ -75,9 +71,9 @@ final class NetworkManager: NetworkManagerProtocol {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let userDetails = try decoder.decode(User.self, from: data)
-                completed(.success(userDetails))
+                completion(.success(userDetails))
             } catch {
-                completed(.failure(.invalidData))
+                completion(.failure(.invalidData))
             }
         }.resume()
     }

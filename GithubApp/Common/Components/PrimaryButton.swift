@@ -36,9 +36,14 @@ class PrimaryButton: UIButton {
         self.setTitle(title, for: .normal)
     }
     
+    func set(title: String, backgroundColor: UIColor)  {
+        self.backgroundColor = backgroundColor
+        self.setTitle(title, for: .normal)
+    }
+    
     private func configureAppearance() {
         translatesAutoresizingMaskIntoConstraints = false
-        layer.cornerRadius = Constants.cornerRadius
+        layer.cornerRadius = Constants.View.cornerRadius
         setTitleColor(.white, for: .normal)
         titleLabel?.font = .preferredFont(forTextStyle: .headline)
     }
