@@ -60,7 +60,7 @@ final class FavoritesViewController: RootViewController<FavoritesView> {
     }
     
     private func showCustomEmptyState() {
-        self.showEmptyState(with: "There's no favorite users. Go add them ^^", in: self.rootView)
+        self.showEmptyState(with: "There's no favorite users.\nGo add them ^^", in: self.rootView)
     }
     
     deinit {

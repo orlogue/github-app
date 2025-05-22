@@ -8,9 +8,28 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     private let username: String
     private let model = FollowersModel()
     private let imageService: ImageServiceProtocol
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
-    private var searchController: UISearchController!
     private var imageLoadingTasks = [String: UUID]()
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search for a user"
+        searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.isHidden = true
+        return searchController
+    }()
+    private lazy var dataSource: UICollectionViewDiffableDataSource<Section, Follower>! = {
+        let dataSource = UICollectionViewDiffableDataSource<Section, Follower>(collectionView: rootView.collectionView) { [weak self] collectionView, indexPath, follower in
+            guard let self = self else { return nil }
+            
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowerCell.reuseID, for: indexPath) as! FollowerCell
+            
+            self.configureCell(cell: cell, follower: follower)
+            
+            return cell
+        }
+        return dataSource
+    }()
     
     init(username: String, imageService: ImageServiceProtocol = ImageService.shared) {
         self.username = username
@@ -26,7 +45,6 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
         rootView.collectionView.delegate = self
-        configureDataSource()
         configureSearchController()
         loadFollowers()
     }
@@ -88,27 +106,8 @@ final class FollowersListViewController: RootViewController<FollowersListView> {
     }
     
     private func configureSearchController() {
-        searchController = UISearchController()
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search for a user"
-        searchController.searchBar.delegate = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.isHidden = true
-        
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Follower>(collectionView: rootView.collectionView) { [weak self] collectionView, indexPath, follower in
-            guard let self = self else { return nil }
-            
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowerCell.reuseID, for: indexPath) as! FollowerCell
-            
-            self.configureCell(cell: cell, follower: follower)
-            
-            return cell
-        }
     }
     
     private func configureCell(cell: FollowerCell, follower: Follower) {
